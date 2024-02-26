@@ -23,5 +23,5 @@ jobs:
 
       - name: Run Verilator
         run: |
-          verilator --lint-only --Wall your_top_module.v
+          verilator --lint-only --Wall input.v
 
