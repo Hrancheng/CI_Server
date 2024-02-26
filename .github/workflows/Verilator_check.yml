@@ -1,0 +1,27 @@
+name: Verilog Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '**/*.v'  # Trigger on changes to Verilog files
+
+jobs:
+  verilator-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install Verilator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y verilator
+
+      - name: Run Verilator
+        run: |
+          verilator --lint-only --Wall your_top_module.v
+
