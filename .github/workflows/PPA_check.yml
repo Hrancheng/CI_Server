@@ -1,0 +1,40 @@
+name: PPA Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '**/*.v'
+      - '**/*.tcl'
+
+jobs:
+  ppa-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install Yosys, OpenROAD, and OpenSTA
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yosys openroad opensta
+
+      - name: Run Yosys for Synthesis
+        run: |
+          yosys -s synth.tcl
+
+      - name: Run OpenROAD for Place and Route
+        run: |
+          openroad -exit pnr.tcl
+
+      - name: Run OpenSTA for Timing Analysis
+        run: |
+          sta sta.conf
+
+      - name: Print PPA Results
+        run: |
+          echo "PPA results:"
+          cat results.txt
